@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { WebService } from "./web.service";
+import { ActivatedRoute} from "@angular/router";
 
 @Component({
   selector:'messages',
@@ -7,7 +8,7 @@ import { WebService } from "./web.service";
     
     <div *ngFor="let message of messages">
       <mat-card class="card">
-        <mat-card-title> {{message.owner}} </mat-card-title>
+        <mat-card-title routerLink="['/messages', message.owner]" style="cursor: pointer"> {{message.owner}} </mat-card-title>
         <mat-card-content> {{message.text}} </mat-card-content> 
       </mat-card>  
     </div> 
@@ -17,12 +18,12 @@ import { WebService } from "./web.service";
 
 export class MessagesComponent{
 
-  constructor(private webSerice: WebService){}
+  constructor(private webSerice: WebService, private route:ActivatedRoute){}
 
-  async ngOnInit(){
-    var response = await this.webSerice.getMessages();
-    console.log(response);
+  ngOnInit(){
+    var name = this.route.snapshot.params.name;
+    this.webSerice.getMessages(name);
   }
 
-  messages = [{text:'some text', owner:'Tim'}, {text:'other text', owner:'Raj'}]
+
 }
